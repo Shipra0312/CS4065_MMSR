@@ -1,11 +1,11 @@
 # ignore idea files
 .idea/
 
-# ignore raw_video data, but perserve folders
+# ignore raw_video data
 data_raw/timelines
 data_raw/videos
 data_raw/metadata.csv
-
-data_extracted
+data_extracted/highlights
+data_extracted/videos
 
 .ipynb_checkpoints/
