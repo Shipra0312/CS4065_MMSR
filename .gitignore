@@ -2,6 +2,8 @@
 .idea/
 
 # ignore raw_video data, but perserve folders
-raw_data/timelines
-raw_data/videos
-raw_data/metadata.csv
+data_raw/timelines
+data_raw/videos
+data_raw/metadata.csv
+
+.ipynb_checkpoints/
