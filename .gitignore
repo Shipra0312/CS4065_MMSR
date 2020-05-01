@@ -6,4 +6,6 @@ data_raw/timelines
 data_raw/videos
 data_raw/metadata.csv
 
+data_extracted
+
 .ipynb_checkpoints/
