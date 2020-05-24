@@ -1,5 +1,6 @@
 # ignore idea files
 .idea/
+venv/
 
 # ignore raw_video data
 data_raw/timelines
