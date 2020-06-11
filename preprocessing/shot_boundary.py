@@ -19,7 +19,7 @@ count = 0
 success = True
 frame_index = 0
 time_stamps_chi = []
-
+all_chi = [0]
 def extract_timestamp(prev_hist, cur_hist, threshold, method, frame_numb):
     score = cv2.compareHist(prev_hist, cur_hist, method)
 
@@ -33,7 +33,7 @@ def extract_timestamp(prev_hist, cur_hist, threshold, method, frame_numb):
         threshold_asses = score < threshold
         timestamp = int(frame_numb / fps)
 
-    return threshold_asses, timestamp
+    return threshold_asses, timestamp , score
 
 
 while success:
@@ -58,8 +58,8 @@ while success:
         continue
 
 
-    assesment_chi, time_chi = extract_timestamp(previous_histogram, histogram, 50000000, cv2.HISTCMP_CHISQR, frame_index)
-
+    assesment_chi, time_chi, chi_score = extract_timestamp(previous_histogram, histogram, 50000000, cv2.HISTCMP_CHISQR, frame_index)
+    all_chi.append(chi_score)
     if assesment_chi:
         time_stamps_chi.append(time_chi)
 
@@ -69,7 +69,7 @@ while success:
         break
 
 
-print(time_stamps_chi)
+
 
 # Frame time: 4760
 # Chi: 67770651.16470273
