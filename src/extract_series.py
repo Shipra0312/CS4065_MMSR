@@ -56,22 +56,21 @@ def calculate_shotboundary(video_file, chuncksize=1):
 
     previous_histogram = None
 
-    count = 0
+    count = 1
     success = True
     frame_index = 0
     scores = []
 
     while success:
-        frame_index += 1
-
         success, image = vidcap.read()
-        if count % int(chuncksize * fps) != 0:
-            print(frame_index, count)
-            count += 1
+        if frame_index % np.rint(chuncksize * count * fps) != 0:
+            frame_index += 1
+            continue
         elif frame_index > frameCount:
             break
         else:
-            count = 0
+            frame_index += 1
+            count += 1
 
             image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
@@ -103,4 +102,3 @@ def smooth(x, beta, window_len=100):
     w = np.kaiser(window_len, beta)
     y = np.convolve(w / w.sum(), s, mode='valid')
     return y[int(window_len / 2 - 1):-int(window_len / 2)]
-

@@ -1,5 +1,8 @@
 import pandas as pd
 import numpy as np
+from pyAudioAnalysis import ShortTermFeatures
+
+import audioBasicIO
 from src.extract_series import calculate_energy, calculate_shotboundary, calculate_pitch, calculate_heur, smooth
 
 video_file = "data_extracted/videos/training1.mp4"
@@ -25,6 +28,12 @@ serie_shotboundary = calculate_shotboundary(video_file, chuncksize=chuncksize)
 serie_energy_smoothed = smooth(serie_energy, 0.1)
 serie_shotboundary_smoothed = smooth(serie_shotboundary, 0.1)
 serie_pitch_smoothed = smooth(serie_shotboundary, 0.1)
+
+
+# [Fs, x] = audioBasicIO.read_audio_file(audio_file)
+# x = audioBasicIO.stereo_to_mono(x)
+# overlap = 0.5*Fs
+# F, f_names = ShortTermFeatures.feature_extraction(x, Fs, Fs, overlap) #takes approx. 2.5 mins to complete
 
 
 """
