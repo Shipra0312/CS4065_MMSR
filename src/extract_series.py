@@ -2,6 +2,9 @@ import aubio
 import librosa
 import numpy as np
 import cv2
+from pyAudioAnalysis import ShortTermFeatures
+
+import audioBasicIO
 
 
 def calculate_energy(audiofile, chuncksize=1, sample_rate=44100):
@@ -22,8 +25,9 @@ def calculate_energy(audiofile, chuncksize=1, sample_rate=44100):
     return energy[1:]
 
 
-def calculate_pitch(audiofile, chuncksize=1, sample_rate=44100):
+def calculate_pitch(audiofile, chuncksize=1, sample_rate=11025):
     Fs = sample_rate
+
     win_s = chuncksize * Fs  # fft size
     hop_s = chuncksize * Fs  # hop size
 
@@ -92,8 +96,14 @@ def calculate_shotboundary(video_file, chuncksize=1):
     return np.array(scores)
 
 
-def calculate_heur(video_file, chuncksize=5):
-    return "NULL"
+def extract_extract_audioAnalysis(audio_file, chuncksize=1):
+    [Fs, x] = audioBasicIO.read_audio_file(audio_file)
+    x = audioBasicIO.stereo_to_mono(x)
+    overlap = chuncksize * Fs
+    F, f_names = ShortTermFeatures.feature_extraction(x, Fs, Fs, overlap)  # takes approx. 2.5 mins to comple
+
+    # return Zero Crossing Rate, Spectral Centroid, Spectral Spread, Spectral Entropy, Spectral Flux, Spectral Rolloff
+    return F[0, 1:], F[3, 1:], F[4, 1:], F[5, 1:], F[6, 1:], F[7, 1:]
 
 
 def smooth(x, beta, window_len=100):
