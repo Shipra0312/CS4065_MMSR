@@ -2,13 +2,14 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import moviepy.editor as mp
-
+from moviepy.video.compositing.concatenate import concatenate_videoclips
 
 import audioBasicIO
 from src.extract_highlights import extract_highlight_df
-from src.extract_series import calculate_energy, calculate_shotboundary, calculate_pitch, smooth, \
+from src.extract_series import calculate_energy, calculate_shotboundary, \
     extract_extract_audioAnalysis
 from src.process_features import process_features
+from moviepy.editor import VideoFileClip
 
 """"""
 "Specify parameters"
@@ -57,12 +58,29 @@ print("Finish processing sequences")
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 print("Combining curves and extracting highlights")
-weights = [10, 10, 0.01, 0.1, 1]
+
+# calculate curve
+weights = [10, 1, 0.1, 0.1, 1]
 curve = np.zeros(processed[0].shape)
 for i in range(len(weights)):
     curve = np.add(curve, weights[i] * processed[i])
 
+plt.plot(curve)
+plt.show()
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "Extract highlight videos"
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-highlight_df = extract_highlight_df(curve, threshold=0.375, min_sec_highlight=10)
+highlight_df = extract_highlight_df(curve, threshold=0.240, min_sec_highlight=10)
+
+
+# Extract video file
+clips =[]
+for row in highlight_df.iterrows():
+    start_sec = row[1][0]
+    end_sec = row[1][1]
+    clip = VideoFileClip(video_file).subclip(start_sec, end_sec)
+    clips.append(clip)
+
+final_clip = concatenate_videoclips(clips)
+final_clip.write_videofile("highlights/match1.mp4")

@@ -2,6 +2,9 @@ import json
 import pandas as pd
 from datetime import datetime
 
+from moviepy.video.compositing.concatenate import concatenate_videoclips
+from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
+
 timeline_df = pd.read_json("data_raw/timelines/1.json")
 timeline_df["date"] = timeline_df["date"]
 
@@ -50,3 +53,8 @@ for i in range(1, rounds + 1):
                 highlights1.append((first_kill_sec, last_kill_sec))
 
 
+for i in range(len(highlights1)):
+    start = highlights1[i][0] - 10
+    end = highlights1[i][1] + 5
+    ffmpeg_extract_subclip("data_extracted/videos/training1.mp4", start, end,
+                           "highlight_extracted/heuristic/train1/highlight%d.mp4" % (i + 1))
