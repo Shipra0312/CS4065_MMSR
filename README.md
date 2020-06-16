@@ -7,7 +7,7 @@ The dataset is obtained from mediaeval19 gamestory workshop.
 TODO:Mention requirements.txt and pyAudioAnalysis
 
 ## Folders and scripts
-```analysis``` contains notebooks for all methods we have tried. For these implementations, notebooks are explained and plots are shown to support decisions.
+```methods``` contains notebooks for all methods we have tried. For these implementations, notebooks are explained and plots are shown to support decisions.
 
 ```data_extracted```  contains extracted match videos, it can be downloaded here or you can generate it using ```preprocessing/extract_videos.py``` 
 
