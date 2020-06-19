@@ -1,5 +1,9 @@
-moviepy
-pandas
-opencv-python
-numpy
-plotly
+moviepy==1.0.2
+pandas==0.24.2
+opencv-python==4.1.0.25
+numpy==1.18.1
+plotly==4.8.1
+aubio==0.4.9
+librosa==0.7.2
+numba==0.43.1
+pyaudioanalysis==0.3.2
