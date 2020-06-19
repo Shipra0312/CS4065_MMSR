@@ -1,4 +1,3 @@
-import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import moviepy.editor as mp
@@ -11,18 +10,38 @@ from src.extract_series import calculate_energy, calculate_shotboundary, \
 from src.process_features import process_features
 from moviepy.editor import VideoFileClip
 
+import argparse
+
+parser = argparse.ArgumentParser(description='Highlight Extractor')
+parser.add_argument('-i', '-input', help='File path of the input video', type=str, required=True)
+parser.add_argument('-c', '-chuncksize',
+                    help='Chuncksize of the highlight video. If not specified, then set to 1 second',
+                    type=int, required=False)
+parser.add_argument('-o', '-out',
+                    help='Path for output highlight video and name'
+                         'If not specified, then highlights are saved to folder highlights', type=str,
+                    required=False)
+args = parser.parse_args()
+
 """"""
 "Specify parameters"
 """"""
-output_dir = ""  # directory of the output file
-chuncksize = 1  # arousal per how many seconds
 
-video_file = "data_extracted/videos/training1.mp4"
-audio_file = "data_extracted/videos/audio1.wav"
+if args.c:
+    chuncksize = args.c  # arousal per how many seconds
+else:
+    chuncksize = 1
+
+output_dir = args.o  # directory of the output file
+
+video_file = args.i
+video = VideoFileClip(video_file)
+
+audio_file = "tmp/audio_tmp.wav"
 
 clip = mp.VideoFileClip(video_file)
-clip.audio.write_audiofile(audio_file)
-
+clip.audio.write_audiofile(audio_file, logger=None)
+print(args.o, args.i, args.c)
 """"""
 "Obtain  sequences"
 """"""
@@ -65,22 +84,23 @@ curve = np.zeros(processed[0].shape)
 for i in range(len(weights)):
     curve = np.add(curve, weights[i] * processed[i])
 
-plt.plot(curve)
-plt.show()
+# plt.plot(curve)
+# plt.show()
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "Extract highlight videos"
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 highlight_df = extract_highlight_df(curve, threshold=0.240, min_sec_highlight=10)
 
-
 # Extract video file
-clips =[]
+clips = []
 for row in highlight_df.iterrows():
     start_sec = row[1][0]
     end_sec = row[1][1]
     clip = VideoFileClip(video_file).subclip(start_sec, end_sec)
     clips.append(clip)
 
+print("Start writing highlight")
 final_clip = concatenate_videoclips(clips)
-final_clip.write_videofile("highlights/match1.mp4")
+final_clip.write_videofile(output_dir)
+print("Finish Highlight Extraction")
