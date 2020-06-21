@@ -41,9 +41,9 @@ An example of this would be:
 
 ```data_raw``` contains original dataset, it can be downloaded [here](https://drive.google.com/drive/folders/1u1hSfAGRgzRiJD1nyTPb7IAYJKDKyyUI?usp=sharing).
 
-```preprocessing``` Data_Analsysis.ipynb shows some initial exploration on the metadata and some simple stastics on the dataset. extract_series.py extracts intended files to ```data_extracted``` folder. 
+```preprocessing``` Data_Analsysis.ipynb shows some initial exploration on the metadata and some simple statics on the dataset. extract_series.py extracts intended files to ```data_extracted``` folder. 
 
-```src``` src folder contains signal processing methods from 
+```src``` src folder contains all methods used for main.py 
 
 ```audioBascIO.py``` For some us, pyAudioAnalysis couldn't work due to broken imports in audioBasicIO.py . By adding this piece of code manually, we avoid the problem of broken imports.   
 
