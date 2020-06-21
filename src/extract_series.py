@@ -16,10 +16,6 @@ def calculate_energy(audiofile, chuncksize=1, sample_rate=44100):
     amplitude = z[21 * window_length: 22 * window_length]
     # ipd.Audio(amplitude, rate=sample_rate)
 
-    # Calculate the energy
-    energy = sum(abs(amplitude ** 2))
-    print(energy)
-
     # Calculate the energy for each chunk
     energy = np.array([sum(abs(z[i:i + window_length] ** 2)) for i in range(0, len(z), window_length)])
     return energy[1:]
@@ -103,12 +99,5 @@ def extract_extract_audioAnalysis(audio_file, chuncksize=1):
     F, f_names = ShortTermFeatures.feature_extraction(x, Fs, Fs, overlap)  # takes approx. 2.5 mins to comple
 
     # return Zero Crossing Rate, Spectral Centroid, Spectral Spread, Spectral Entropy, Spectral Flux, Spectral Rolloff
-    return F[0, 1:], F[3, 1:], F[4, 1:], F[5, 1:], F[6, 1:], F[7, 1:]
+    return F[0], F[3], F[4], F[5], F[6], F[7]
 
-
-def smooth(x, beta, window_len=100):
-    """ Kaiser smoothing """
-    s = np.r_[x[window_len - 1:0:-1], x, x[-1:-window_len:-1]]
-    w = np.kaiser(window_len, beta)
-    y = np.convolve(w / w.sum(), s, mode='valid')
-    return y[int(window_len / 2 - 1):-int(window_len / 2)]

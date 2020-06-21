@@ -20,3 +20,4 @@ def extract_highlight_df(curve, threshold=0.375, min_sec_highlight=10):
             highlight_df.loc[row_index, 'Start_time'] = highlights_sequence[0]
             highlight_df.loc[row_index, 'End_time'] = highlights_sequence[-1]
             row_index = row_index + 1
+    return highlight_df
