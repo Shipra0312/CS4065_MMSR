@@ -15,12 +15,22 @@ import argparse
 parser = argparse.ArgumentParser(description='Highlight Extractor')
 parser.add_argument('-i', '-input', help='File path of the input video', type=str, required=True)
 parser.add_argument('-c', '-chuncksize',
-                    help='Chuncksize of the highlight video. If not specified, then set to 1 second',
+                    help='Chuncksize of the highlight video. Used during preporcessing of the video. If not '
+                         'specified, then set to 1 second',
                     type=int, required=False)
 parser.add_argument('-o', '-out',
-                    help='Path for output highlight video and name'
-                         'If not specified, then highlights are saved to folder highlights', type=str,
+                    help='Path for output highlight video and name.',
+                    type=str,
                     required=False)
+
+parser.add_argument('-t', '-threshold,',
+                    help='The treshold quantile (From 0.0 to 1.0) for the arousal curve. Values above this quantile '
+                         'will be classified as highlight. If not '
+                         'specified, the threshold is 0.80',
+                    type=float,
+                    required=False
+                    )
+
 args = parser.parse_args()
 
 """"""
@@ -32,16 +42,22 @@ if args.c:
 else:
     chuncksize = 1
 
+if args.t:
+    threshold_q = args.t  # arousal per how many seconds
+else:
+    threshold_q = 0.85
+
 output_dir = args.o  # directory of the output file
 
 video_file = args.i
+print("Loading " + video_file)
 video = VideoFileClip(video_file)
 
 audio_file = "tmp/audio_tmp.wav"
 
 clip = mp.VideoFileClip(video_file)
 clip.audio.write_audiofile(audio_file, logger=None)
-print(args.o, args.i, args.c)
+
 """"""
 "Obtain  sequences"
 """"""
@@ -90,7 +106,8 @@ for i in range(len(weights)):
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "Extract highlight videos"
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-highlight_df = extract_highlight_df(curve, threshold=0.240, min_sec_highlight=10)
+threshold = np.quantile(curve, threshold_q)
+highlight_df = extract_highlight_df(curve, threshold=threshold, min_sec_highlight=10)
 
 # Extract video file
 clips = []
@@ -102,5 +119,5 @@ for row in highlight_df.iterrows():
 
 print("Start writing highlight")
 final_clip = concatenate_videoclips(clips)
-final_clip.write_videofile(output_dir)
+final_clip.write_videofile(output_dir, threads=4)
 print("Finish Highlight Extraction")
