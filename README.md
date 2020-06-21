@@ -35,7 +35,7 @@ An example of this would be:
 ```python main.py -i data_extracted/videos/training1.mp4 -o highlights/highlight1.mp4 -t 0.85```
 
 ## Folders and scripts
-```methods``` contains notebooks for all methods we have tried. For these implementations, notebooks are explained and plots are shown to support decisions.
+```analysis``` contains notebooks for all methods we have tried/tested. Notebooks are explained and plots are shown to support decisions.
 
 ```data_extracted```  contains extracted match videos, it can be downloaded [here](https://drive.google.com/drive/folders/1u1hSfAGRgzRiJD1nyTPb7IAYJKDKyyUI?usp=sharing) or you can generate those videos using ```preprocessing/extract_videos.py``` 
 
@@ -44,6 +44,8 @@ An example of this would be:
 ```preprocessing``` Data_Analsysis.ipynb shows some initial exploration on the metadata and some simple stastics on the dataset. extract_series.py extracts intended files to ```data_extracted``` folder. 
 
 ```src``` src folder contains signal processing methods from 
+
+```audioBascIO.py``` For some us, pyAudioAnalysis couldn't work due to broken imports in audioBasicIO.py . By adding this piece of code manually, we avoid the problem of broken imports.   
 
 ```main.py``` main execution of the program, it contains selected methods from analysis folder.
 
